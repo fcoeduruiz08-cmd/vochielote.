@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Vochi Elote | Pedido Online</title>
+
+<style>
+:root{
+  --amarillo:#ffc107;
+  --gris:#1b1b1b;
+  --blanco:#ffffff;
+  --verde:#25D366;
+  --rojo:#ff4d4d;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family: system-ui, Arial, sans-serif;
+  background: linear-gradient(180deg,#0f0f0f,#1a1a1a);
+  color:var(--blanco);
+}
+
+.wrap{max-width:1200px;margin:auto;padding:24px;}
+
+.logo{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.logo img{
+  max-width:250px;
+  width:100%;
+  height:auto;
+  display:block;
+  margin:auto;
+}
+
+h1{text-align:center;color:var(--amarillo);margin-bottom:30px;}
+.section{margin-top:40px;}
+.section h2{color:var(--amarillo);margin-bottom:15px;}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:var(--gris);
+  padding:18px;
+  border-radius:15px;
+  text-align:center;
+}
+
+.card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-bottom:10px;
+}
+
+.price{
+  color:var(--amarillo);
+  font-weight:bold;
+  margin:5px 0;
+}
+
+select, textarea{
+  margin-top:6px;
+  padding:6px;
+  border-radius:6px;
+  border:none;
+  width:100%;
+}
+
+textarea{
+  display:none;
+  resize:none;
+}
+
+.btn-comentario{
+  margin-top:6px;
+  padding:6px;
+  border:none;
+  border-radius:6px;
+  background:#444;
+  color:white;
+  cursor:pointer;
+  width:100%;
+}
+
+.card button{
+  margin-top:8px;
+  padding:8px;
+  border:none;
+  border-radius:8px;
+  background:var(--amarillo);
+  font-weight:bold;
+  cursor:pointer;
+  width:100%;
+}
+
+/* CARRITO */
+
+.carrito{
+  margin-top:50px;
+  background:#111;
+  padding:20px;
+  border-radius:15px;
+}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+  font-size:14px;
+}
+
+.controls button{
+  margin:0 3px;
+  padding:3px 8px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.btn-menos{background:#555;color:white;}
+.btn-mas{background:var(--amarillo);}
+.btn-eliminar{background:var(--rojo);color:white;}
+
+.total{margin-top:15px;font-size:18px;font-weight:bold;}
+
+.form{margin-top:20px;display:grid;gap:10px;}
+
+input,.form select{
+  padding:10px;
+  border-radius:8px;
+  border:none;
+}
+
+.btn-finalizar{
+  margin-top:15px;
+  padding:15px;
+  border:none;
+  border-radius:10px;
+  background:var(--verde);
+  font-weight:bold;
+  cursor:pointer;
+  width:100%;
+}
+
+/* COMBOS DESTACADOS */
+
+.combo-destacado{
+  border:3px solid gold;
+  box-shadow:0 0 20px rgba(255,215,0,0.6);
+  position:relative;
+  transition:0.3s;
+}
+
+.combo-destacado:hover{
+  transform:scale(1.03);
+  box-shadow:0 0 30px rgba(255,215,0,0.9);
+}
+
+.etiqueta-promo{
+  position:absolute;
+  top:-12px;
+  right:-12px;
+  background:gold;
+  color:black;
+  font-weight:bold;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="logo">
+  <img src="logo.png" alt="El Vochi Elote">
+</div>
+
+<h1>El Vochi Elote</h1>
+
+<script>
+function opcionesChile(){
+return `
+<select class="chile">
+<option value="Chile que no pica">Chile que no pica</option>
+<option value="Chile que pica">Chile que pica</option>
+<option value="Chile morita">Chile morita</option>
+</select>`;
+}
+
+function opcionesTopping(){
+return `
+<select class="topping">
+<option value="Sin topping">Sin topping</option>
+<option value="Ruffles">Ruffles</option>
+<option value="Cheetos Flaming Hot">Cheetos Flaming Hot</option>
+<option value="Cacahuate">Cacahuate</option>
+<option value="Queso Blanco">Queso Blanco</option>
+<option value="Ajonjolí">Ajonjolí</option>
+<option value="Aderezo Chipotle">Aderezo Chipotle</option>
+<option value="Salsa Macha">Salsa Macha</option>
+</select>`;
+}
+
+function botonComentario(){
+return `
+<button type="button" class="btn-comentario" onclick="toggleComentario(this)">Agregar comentario</button>
+<textarea class="comentario" placeholder="Escribe tu comentario aquí..."></textarea>
+`;
+}
+
+function toggleComentario(btn){
+let textarea = btn.nextElementSibling;
+textarea.style.display = textarea.style.display === "block" ? "none" : "block";
+}
+</script>
+
+<!-- PRODUCTOS -->
+
+<div class="section">
+<h2>Elotes Enteros</h2>
+<div class="grid">
+
+<div class="card">
+<img src="elote-sencillo.jpg">
+<h3>Elote Sencillo</h3>
+<div class="price">$35</div>
+<script>document.write(opcionesChile()+botonComentario());</script>
+<button onclick="agregar(this,'Elote Sencillo',35)">Agregar</button>
+</div>
+
+<div class="card">
+<img src="elote-preparado.jpg">
+<h3>Elote Preparado</h3>
+<div class="price">$45</div>
+<script>document.write(opcionesChile()+opcionesTopping()+botonComentario());</script>
+<button onclick="agregar(this,'Elote Preparado',45)">Agregar</button>
+</div>
+
+</div>
+</div>
+
+<div class="section">
+<h2>Elote en Vaso</h2>
+<div class="grid">
+
+<div class="card">
+<img src="vaso-chico.jpg">
+<h3>Vaso Chico</h3>
+<div class="price">$30</div>
+<script>document.write(opcionesChile()+botonComentario());</script>
+<button onclick="agregar(this,'Vaso Chico',30)">Agregar</button>
+</div>
+
+<div class="card">
+<img src="vaso-mediano.jpg">
+<h3>Vaso Mediano</h3>
+<div class="price">$40</div>
+<script>document.write(opcionesChile()+opcionesTopping()+botonComentario());</script>
+<button onclick="agregar(this,'Vaso Mediano',40)">Agregar</button>
+</div>
+
+<div class="card">
+<img src="vaso-grande.jpg">
+<h3>Vaso Grande</h3>
+<div class="price">$50</div>
+<script>document.write(opcionesChile()+opcionesTopping()+botonComentario());</script>
+<button onclick="agregar(this,'Vaso Grande',50)">Agregar</button>
+</div>
+
+<div class="card">
+<img src="vaso-medio.jpg">
+<h3>Vaso Medio Litro</h3>
+<div class="price">$65</div>
+<script>document.write(opcionesChile()+opcionesTopping()+botonComentario());</script>
+<button onclick="agregar(this,'Vaso Medio Litro',65)">Agregar</button>
+</div>
+
+</div>
+</div>
+
+<div class="section">
+<h2>Botanas Preparadas</h2>
+<div class="grid">
+
+<div class="card">
+<img src="conchitas.jpg">
+<h3>Conchitas Preparadas</h3>
+<div class="price">$65</div>
+<script>document.write(opcionesChile()+opcionesTopping()+botonComentario());</script>
+<button onclick="agregar(this,'Conchitas Preparadas',65)">Agregar</button>
+</div>
+
+<div class="card">
+<img src="ruffles.jpg">
+<h3>Ruffles Preparados</h3>
+<div class="price">$65</div>
+<script>document.write(opcionesChile()+opcionesTopping()+botonComentario());</script>
+<button onclick="agregar(this,'Ruffles Preparados',65)">Agregar</button>
+</div>
+
+<div class="card">
+<img src="tostitos.jpg">
+<h3>Tostitos Preparados</h3>
+<div class="price">$65</div>
+<script>document.write(opcionesChile()+opcionesTopping()+botonComentario());</script>
+<button onclick="agregar(this,'Tostitos Preparados',65)">Agregar</button>
+</div>
+
+<div class="card">
+<img src="tostileo.jpg">
+<h3>Tostileo Preparado</h3>
+<div class="price">$65</div>
+<script>document.write(opcionesChile()+opcionesTopping()+botonComentario());</script>
+<button onclick="agregar(this,'Tostileo Preparado',65)">Agregar</button>
+</div>
+
+</div>
+</div>
+
+<div class="section">
+<h2>🔥 Combos Especiales</h2>
+<div class="grid">
+
+<div class="card combo-destacado">
+<span class="etiqueta-promo">🔥 PROMO</span>
+<img src="combo1.jpg">
+<h3>Combo 1</h3>
+<p>4 Elotes en vaso chico</p>
+<div class="price">$100</div>
+<script>document.write(opcionesChile()+botonComentario());</script>
+<button onclick="agregar(this,'Combo 1 - 4 Vasos Chico',100)">Agregar</button>
+</div>
+
+<div class="card combo-destacado">
+<span class="etiqueta-promo">🔥 PROMO</span>
+<img src="combo2.jpg">
+<h3>Combo 2</h3>
+<p>3 Elotes en vaso mediano</p>
+<div class="price">$100</div>
+<script>document.write(opcionesChile()+botonComentario());</script>
+<button onclick="agregar(this,'Combo 2 - 3 Vasos Mediano',100)">Agregar</button>
+</div>
+
+<div class="card combo-destacado">
+<span class="etiqueta-promo">🔥 PROMO</span>
+<img src="combo3.jpg">
+<h3>Combo 3</h3>
+<p>1 Vaso grande + 1 Tostitos preparados</p>
+<div class="price">$100</div>
+<script>document.write(opcionesChile()+botonComentario());</script>
+<button onclick="agregar(this,'Combo 3 - Vaso Grande + Tostitos',100)">Agregar</button>
+</div>
+
+</div>
+</div>
+
+<!-- CARRITO -->
+<div class="carrito">
+<h2>🛒 Tu Pedido</h2>
+<div id="lista"></div>
+<div class="total">Total: $<span id="total">0</span></div>
+
+<div class="form">
+<input type="text" id="nombre" placeholder="Tu nombre">
+<select id="envio" onchange="toggleDireccion()">
+<option value="Recoger en local">Recoger en local</option>
+<option value="Envío a domicilio">Envío a domicilio</option>
+</select>
+
+<input type="text" id="direccion" placeholder="Dirección" style="display:none;">
+
+<select id="pago">
+<option value="Efectivo">Efectivo</option>
+<option value="Transferencia">Transferencia</option>
+<option value="Tarjeta">Tarjeta</option>
+</select>
+</div>
+
+<button class="btn-finalizar" onclick="finalizar()">Enviar Pedido por WhatsApp</button>
+</div>
+
+</div>
+
+<script>
+let carrito=[];
+
+function agregar(btn,nombre,precio){
+let card=btn.parentElement;
+
+let chile=card.querySelector(".chile")?.value || "";
+let topping=card.querySelector(".topping")?.value || "";
+let comentarioInput = card.querySelector(".comentario");
+let comentario = comentarioInput?.value.trim() || "";
+
+let nombreFinal=nombre;
+
+if(chile) nombreFinal+=" ("+chile+")";
+if(topping && topping !== "Sin topping") nombreFinal+=" + "+topping;
+if(comentario) nombreFinal+=" | Nota: "+comentario;
+
+let prod=carrito.find(p=>p.nombre===nombreFinal);
+
+if(prod){
+    prod.cantidad++;
+}else{
+    carrito.push({nombre:nombreFinal,precio,cantidad:1});
+}
+
+actualizar();
+
+/* Limpiar comentario después de agregar */
+if(comentarioInput){
+    comentarioInput.value="";
+    comentarioInput.style.display="none";
+}
+}
+
+
+function actualizar(){
+const lista=document.getElementById("lista");
+lista.innerHTML="";
+let total=0;
+
+carrito.forEach((p,index)=>{
+total+=p.precio*p.cantidad;
+lista.innerHTML+=`
+<div class="item">
+${p.cantidad} x ${p.nombre}
+<div class="controls">
+<button class="btn-menos" onclick="cambiar(${index},-1)">-</button>
+<button class="btn-mas" onclick="cambiar(${index},1)">+</button>
+<button class="btn-eliminar" onclick="eliminar(${index})">X</button>
+</div>
+</div>`;
+});
+
+document.getElementById("total").textContent=total;
+}
+
+function cambiar(index,cambio){
+carrito[index].cantidad+=cambio;
+if(carrito[index].cantidad<=0){carrito.splice(index,1);}
+actualizar();
+}
+
+function eliminar(index){
+carrito.splice(index,1);
+actualizar();
+}
+
+function toggleDireccion(){
+let envio=document.getElementById("envio").value;
+document.getElementById("direccion").style.display=
+envio==="Envío a domicilio"?"block":"none";
+}
+
+function finalizar(){
+if(carrito.length===0){alert("Tu carrito está vacío");return;}
+
+let nombre=document.getElementById("nombre").value;
+let direccion=document.getElementById("direccion").value;
+let envio=document.getElementById("envio").value;
+let pago=document.getElementById("pago").value;
+
+let mensaje="Hola, quiero hacer este pedido:%0A%0A";
+carrito.forEach(p=>{
+mensaje+=`${p.cantidad} x ${p.nombre}%0A`;
+});
+mensaje+=`%0ATotal: $${document.getElementById("total").textContent}%0A`;
+mensaje+=`%0ANombre: ${nombre}%0A`;
+mensaje+=`Tipo de entrega: ${envio}%0A`;
+if(envio==="Envío a domicilio") mensaje+=`Dirección: ${direccion}%0A`;
+mensaje+=`Método de pago: ${pago}`;
+
+window.open(`https://wa.me/528130613639?text=${mensaje}`,"_blank");
+}
+</script>
+
+</body>
+</html>
